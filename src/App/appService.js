@@ -1,13 +1,13 @@
-const getData = () => {
-  const requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-  };
-
-  fetch('https://covidtracking.com/api/states/daily', requestOptions)
-    .then((response) => response.json())
-    .then((result) => console.log(result))
-    .catch((error) => console.log('error', error));
+const createStatesObject = (data) => {
+  const statesObject = {};
+  data.forEach((state) => {
+    const stateAbr = state.state;
+    if (!statesObject[stateAbr]) {
+      statesObject[stateAbr] = [];
+    }
+    statesObject[stateAbr].push(state);
+  });
+  return statesObject;
 };
 
-export default getData;
+export default createStatesObject;
