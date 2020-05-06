@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import createStatesObject from './appService';
-// import State from '../Components/State';
+import { createStatesObject, getData } from './appService';
+import State from '../Components/State/State';
 import useDropdown from '../useDropdown';
 
 const App = () => {
@@ -12,32 +12,23 @@ const App = () => {
   useEffect(() => {
     setData([]);
     setTerritory('');
-
     (async () => {
-      const requestOptions = {
-        method: 'GET',
-        redirect: 'follow',
-      };
-      try {
-        const response = await fetch('https://covidtracking.com/api/states/daily', requestOptions);
-        const resJson = await response.json();
-        setData(resJson);
-        const statesObject = createStatesObject(resJson);
-        setDataTable(statesObject);
-        setStates(Object.keys(statesObject));
-      } catch (error) {
-        console.error(error);
-      }
+      const res = await getData();
+      setData(res);
+      const statesObject = createStatesObject(res);
+      setDataTable(statesObject);
+      setStates(Object.keys(statesObject));
     })();
-  }, [setTerritory]);
+  }, [setTerritory, setData]);
 
-  console.log(states);
-
+  const stateData = dataTable[territory];
+  console.log(stateData);
   return (
     <main>
       <header>State COVID19 Tracker</header>
-      {/* {(data && data.map((state) => <p>{state.state}</p>)) || <p>Loading...</p>} */}
+      {(data && <p>Select a State or Territory to View Information</p>) || <p>Loading...</p>}
       <TerritoryDropdown />
+      {(!stateData && <p>No territory selected</p>) || <State stateData={stateData} territory={territory} />}
     </main>
   );
 };
