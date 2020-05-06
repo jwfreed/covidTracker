@@ -7,10 +7,10 @@ export const createStatesObject = (data) => {
     }
     statesObject[stateAbr].push(state);
   });
+  const dayMonthYear = new Date();
+  statesObject.dateCreated = `${dayMonthYear.getDate()}/${dayMonthYear.getMonth()}/${dayMonthYear.getFullYear()}`;
   return statesObject;
 };
-
-// export default createStatesObject;
 
 export async function getData() {
   const requestOptions = {
